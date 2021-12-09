@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+  
+    <meta charset="utf-8">
+    <title>PROJECT</title>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+    integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+    crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h2 class="heading" style="text-align:center;"> Generate UML Diagrams from Software Requirement Analysis Report </h2>
+    <form id = "id" method="POST" action="/submit"> 
+    <div class="row " style="margin:20px;">
+            <div class="col-sm-2 block" >
+                <div class=" button"><input type ="submit" name="action" value="Text Segmentation"></div>
+                <div class=" button"><input type ="submit" name="action" value="Text Tokenisation"></div>
+                <div class=" button"><input type ="submit" name="action" value="Pos Tagging"></div>
+                <div class=" button"><input type ="submit" name="action" value="Port Lemmatization"></div>
+                <div class=" button"><input type ="submit" name="action" value="Knowledge Extract"></div>
+                <div class=" button"><input type ="submit" name="action" value="Generate UML"></div>
+                <div class="reset button"><input type ="submit" class="reset"name="action" value="RESET"></div>
+            </div>
+    
+        <div class="col-sm-10">
+            <div class="block" >       
+                <label for="Text Acquisition" class="main">Enter your requirement elicitations here :</label><br><br>
+                <div class="col">
+                    <textarea name = "Text Acquisition" form = "id" rows = "10" placeholder="My requirement specifications are .." >{{ doc }}</textarea><br><br>
+                </div>    
+            </div>
+            <br>
+            {% if show[0] == 1 %}
+            <div class="block" id="segment" >
+                <label class="main">Segmentation</label><br><br>
+                <div class="col">
+                    {% for line in result[0] %}
+                    <div>{{ line }}</div>
+                    {% endfor %}
+                </div>                                 
+            </div>
+            <br>
+            {% endif %}
+
+            {% if show[1] == 1 %}
+            <div class="block" id="token" >
+                <label class="main">Tokenisation</label><br><br>
+                <div class="col">
+                    {% for line in result[1] %}
+                    <div>
+                        {% for token in line %} 
+                            {{ token }}/
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>                                            
+            </div>
+            <br>
+            {% endif %}
+            
+            {% if show[2] == 1 %}
+            <div class="block" id="tag" >
+                <label class="main">Pos Tagging</label><br><br>
+                <div class="col">
+                    {% for line in result[2] %}
+                    <div>
+                        {% for tag_text in line %} 
+                            {{ tag_text }}; 
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>                                   
+            </div>
+            <br>
+            {% endif %}
+
+            {% if show[3] == 1 %}
+            <div class="block" id="stem" >
+                <label class="main">Port Lemmatization</label><br><br>
+                <div class="col">
+                    {% for line in result[3] %}
+                    <div>
+                        {% for lemma in line %} 
+                            {{ lemma }}, 
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>                           
+            </div>
+            <br>
+            {% endif %}
+
+            {% if show[4] == 1 %}
+            <div class="block" id="info" >
+                <label class="main">Knowledge Extraction</label><br><br>
+                <div class="col">
+                    {% for actor in result[4] %}
+                    <div>
+                        {{ actor }}: 
+                        {% for use_case in result[4][actor] %} 
+                            {{ use_case }}, 
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>                               
+                    
+            </div>
+            <br>
+            {% endif %}
+
+            {% if show[5] == 1 %}
+            <div class="block" id="diagram" >
+                <label class="main">UML Diagram</label><br><br>     
+                <img src="{{url_for('static', filename='pillow_imagedraw.jpg')}}" style="width:100%; height:900px;" > 
+            </div>
+            {% endif %}
+            <br>
+
+        </div>
+    </div>
+</form>
+  
+</body>
+</html>
